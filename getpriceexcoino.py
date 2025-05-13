@@ -41,6 +41,7 @@ def a1():
     c1 = "/usr/bin/chromedriver"
     #c1 = "C:\\Users\\MART\\Downloads\\chromedriver-win64\\chromedriver.exe"
     
+    
     try:
         # راه‌اندازی درایور
         d1 = webdriver.Chrome(service=Service(c1), options=b1)
