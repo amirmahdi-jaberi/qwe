@@ -2,11 +2,16 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
+import tempfile
 import time
+import shutil
 
 def a1():
+    # مسیر موقتی برای پروفایل کاربر (رفع خطای session not created)
+    user_data_dir = tempfile.mkdtemp()
+
     b1 = Options()
-    #b1.add_argument('--headless')
+    # b1.add_argument('--headless')  # فعال‌سازی در صورت نیاز
     b1.add_argument('--disable-gpu')
     b1.add_argument('--no-sandbox')
     b1.add_argument('--disable-dev-shm-usage')
@@ -21,12 +26,18 @@ def a1():
     b1.add_argument('--disable-blink-features=AutomationControlled')
     b1.add_experimental_option('excludeSwitches', ['enable-automation'])
     b1.add_experimental_option('useAutomationExtension', False)
+
+    # دایرکتوری موقتی برای جلوگیری از تداخل session
+    b1.add_argument(f'--user-data-dir={user_data_dir}')
+
     c1 = "/usr/bin/chromedriver"
-    #c1 = "C:\\Users\\MART\\Downloads\\chromedriver-win64\\chromedriver.exe"
     d1 = webdriver.Chrome(service=Service(c1), options=b1)
+
+    # تغییر user-agent برای مخفی‌سازی اتوماسیون
     d1.execute_cdp_cmd('Network.setUserAgentOverride', {
         "userAgent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
     })
+
     try:
         d1.get("https://www.excoino.com/market/exchange/xrp_irr")
         d1.set_window_size(1920, 1080)
@@ -42,10 +53,15 @@ def a1():
                     k1 = i1[1].text.strip()
                     e1[j1] = float(k1.replace(',', ''))
                     g1 += 1
-                    if g1 == 450: break
-            except Exception: pass
+                    if g1 == 450:
+                        break
+            except Exception:
+                pass
         return e1
-    finally: d1.quit()
+    finally:
+        d1.quit()
+        # حذف دایرکتوری موقتی بعد از پایان
+        shutil.rmtree(user_data_dir, ignore_errors=True)
 
 if __name__ == "__main__":
     l1 = a1()
