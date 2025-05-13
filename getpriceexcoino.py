@@ -39,6 +39,7 @@ def a1():
     
     # مسیر chromedriver
     c1 = "/usr/bin/chromedriver"
+    #c1 = "C:\\Users\\MART\\Downloads\\chromedriver-win64\\chromedriver.exe"
     
     try:
         # راه‌اندازی درایور
