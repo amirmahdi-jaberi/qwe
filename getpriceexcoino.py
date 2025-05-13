@@ -38,7 +38,7 @@ def a1():
     b1.add_experimental_option('useAutomationExtension', False)
     
     # مسیر chromedriver
-    c1 = "C:\\Users\\MART\\Downloads\\chromedriver-win64\\chromedriver.exe"
+    c1 = "/usr/bin/chromedriver"
     
     try:
         # راه‌اندازی درایور
