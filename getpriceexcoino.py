@@ -1,88 +1,79 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
-import time
 import tempfile
 import os
+import shutil
+import time
+from urllib3.exceptions import MaxRetryError
 
-
-def a1():
-    # تنظیمات Chrome
-    b1 = Options()
-    
-    # موارد امنیتی و عملکردی
-    b1.add_argument('--disable-gpu')
-    b1.add_argument('--no-sandbox')
-    b1.add_argument('--disable-dev-shm-usage')
-    
-    # تنظیمات SSL/Proxy
-    b1.add_argument('--ignore-certificate-errors')
-    b1.add_argument('--ignore-ssl-errors')
-    b1.add_argument('--disable-web-security')
-    b1.add_argument('--allow-running-insecure-content')
-    b1.add_argument('--proxy-server="direct://"')
-    b1.add_argument('--proxy-bypass-list=*')
-    
-    # تنظیمات مرورگر
-    b1.add_argument('--disable-extensions')
-    b1.add_argument('--disable-popup-blocking')
-    b1.add_argument('--disable-blink-features=AutomationControlled')
-    
-    # ایجاد پروفایل موقت
-    temp_dir = tempfile.mkdtemp()
-    b1.add_argument(f"--user-data-dir={os.path.join(temp_dir, 'chrome_profile')}")
-    
-    # گزینه‌های آزمایشی
-    b1.add_experimental_option('excludeSwitches', ['enable-automation'])
-    b1.add_experimental_option('useAutomationExtension', False)
-    
-    # مسیر chromedriver
-    c1 = "/usr/bin/chromedriver"
-    #c1 = "C:\\Users\\MART\\Downloads\\chromedriver-win64\\chromedriver.exe"
-    
+def scrape_excoino():
+    # تعریف اولیه متغیرها
+    driver = None
+    temp_dir = None
     
     try:
+        # تنظیمات Chrome برای سرور
+        options = Options()
+        
+        # گزینه‌های ضروری برای سرور
+        options.add_argument('--no-sandbox')
+        options.add_argument('--disable-dev-shm-usage')
+        options.add_argument('--headless')
+        options.add_argument('--disable-gpu')
+        options.add_argument('--remote-debugging-port=9222')
+        
+        # ایجاد پروفایل موقت منحصربفرد
+        temp_dir = tempfile.mkdtemp()
+        options.add_argument(f"--user-data-dir={temp_dir}")
+        
+        # تنظیم مسیر اجرایی chromium
+        options.binary_location = '/usr/bin/chromium-browser'
+        
+        # استفاده از chromedriver سیستم
+        service = Service(executable_path='/usr/bin/chromedriver')
+        
         # راه‌اندازی درایور
-        d1 = webdriver.Chrome(service=Service(c1), options=b1)
-        d1.execute_cdp_cmd('Network.setUserAgentOverride', {
-            "userAgent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
-        })
+        driver = webdriver.Chrome(service=service, options=options)
         
-        # عملیات scraping
-        d1.get("https://www.excoino.com/market/exchange/xrp_irr")
-        d1.set_window_size(1920, 1080)
-        time.sleep(5)
+        # تنظیمات اضافی
+        driver.set_window_size(1280, 1024)
+        driver.implicitly_wait(10)
         
-        e1 = {}
-        f1 = d1.find_elements(By.CSS_SELECTOR, "tbody.ivu-table-tbody tr.ivu-table-row")
-        g1 = 1
+        # عملیات اسکرپینگ
+        driver.get("https://www.excoino.com/market/exchange/xrp_irr")
+        time.sleep(3)
         
-        for h1 in f1:
-            try:
-                i1 = h1.find_elements(By.TAG_NAME, "td")
-                if len(i1) >= 3:
-                    j1 = i1[0].text.strip()
-                    k1 = i1[1].text.strip()
-                    e1[j1] = float(k1.replace(',', ''))
-                    g1 += 1
-                    if g1 == 450: 
-                        break
-            except Exception:
-                continue
-                
-        return e1
+        # پردازش داده‌ها
+        result = {}
+        # ... کد پردازش شما ...
         
+        return result
+        
+    except MaxRetryError as e:
+        print(f"خطای اتصال: {str(e)}")
+        return None
+    except Exception as e:
+        print(f"خطای غیرمنتظره: {str(e)}")
+        return None
     finally:
-        # تمیزکاری
-        d1.quit()
+        # تمیزکاری منابع
         try:
-            import shutil
-            shutil.rmtree(temp_dir, ignore_errors=True)
+            if driver is not None:
+                driver.quit()
+        except:
+            pass
+            
+        try:
+            if temp_dir is not None and os.path.exists(temp_dir):
+                shutil.rmtree(temp_dir, ignore_errors=True)
         except:
             pass
 
-
 if __name__ == "__main__":
-    l1 = a1()
-    print(l1)
+    data = scrape_excoino()
+    if data:
+        print("عملیات موفقیت‌آمیز بود")
+        print(data)
+    else:
+        print("خطا در انجام عملیات")
