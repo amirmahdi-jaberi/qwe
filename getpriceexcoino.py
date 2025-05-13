@@ -10,7 +10,7 @@ logging.basicConfig(level=logging.INFO)
 def a1():
     logging.info("راه‌اندازی مرورگر...")
     b1 = Options()
-    b1.add_argument('--headless')
+    b1.add_argument('--headless=new')
     b1.add_argument('--disable-gpu')
     b1.add_argument('--no-sandbox')
     b1.add_argument('--disable-dev-shm-usage')
@@ -23,8 +23,11 @@ def a1():
     b1.add_argument('--disable-extensions')
     b1.add_argument('--disable-popup-blocking')
     b1.add_argument('--disable-blink-features=AutomationControlled')
+    b1.add_argument('--disable-software-rasterizer')
+    b1.add_argument('--disable-features=VizDisplayCompositor')
     b1.add_experimental_option('excludeSwitches', ['enable-automation'])
     b1.add_experimental_option('useAutomationExtension', False)
+
 
     c1 = "/usr/local/bin/chromedriver"
     try:
