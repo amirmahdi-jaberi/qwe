@@ -26,7 +26,7 @@ def a1():
     # اگر قبلاً اضافه شده، حتماً پاک شود:
     # b1.add_argument('--user-data-dir=...')  ← کاملاً حذف شود
 
-    c1 = "/usr/bin/chromedriver"
+    c1 = "/usr/local/bin/chromedriver"
     d1 = webdriver.Chrome(service=Service(c1), options=b1)
 
     # تغییر user-agent
