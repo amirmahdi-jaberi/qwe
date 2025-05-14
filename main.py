@@ -110,6 +110,7 @@ def ao(ap: List[Dict], aq: int, ar: int) -> str:
     
     return at
 
+
 @k.message_handler(commands=['start'])
 def av(aw):
     i.info(f"کاربر {aw.from_user.id} دستور start را ارسال کرد")
@@ -119,6 +120,7 @@ def av(aw):
     دستورات موجود:
     /opportunities - نمایش فرصت‌های آربیتراژ
     /help - راهنمای استفاده از ربات
+    💚❤💙
     """
     k.reply_to(aw, ax)
 
