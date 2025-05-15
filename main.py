@@ -23,7 +23,7 @@ def g():
     return e.getLogger(__name__)
 
 i = g()
-j = "7571924632:AAEzYHus2yp5jC9JlQXID2A-9NSG5ZnYXlc"
+j = "531774800:AAF3ac2GWgJDechgkuKjdp7eyaoeKTUovv0"
 k = telebot.TeleBot(j)
 
 def l() -> Tuple[Dict[str, float], Dict[str, float]]:
